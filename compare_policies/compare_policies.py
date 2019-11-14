@@ -1,10 +1,29 @@
 import xml.etree.ElementTree as ET
+import requests 
+import json
 
 class Compare:
 
     def __init__(self):
-        self.path1 = input("What is the full path of the first policy.xml?")
-        self.path2 = input("what is the full path of the second policy.xml?")
+        self.guid1 = input("What is the guid of the first policy?")
+        self.guid2 = input("what is the guid of the second policy?")
+        client_id = ""
+        api_key = ""
+        auth = (client_id, api_key)
+        
+        url1 = f"https://api.amp.cisco.com/v1/policies/{self.guid1}"
+        r1 = requests.get(url1, auth=auth)
+        j1 = json.loads(r1.content)
+        xml1 = j1['data']['links']['policy_xml']
+        self.name1 = j1['data']['name']
+        self.r1 = requests.get(xml1, auth=auth)
+        
+        url2 = f"https://api.amp.cisco.com/v1/policies/{self.guid2}"
+        r2 = requests.get(url2, auth=auth)
+        j2 = json.loads(r2.content)
+        xml2 = j2['data']['links']['policy_xml']
+        self.name2 = j2['data']['name']
+        self.r2 = requests.get(xml2, auth=auth)
 
     def parse_xml(self, path):
         """
@@ -88,9 +107,8 @@ class Compare:
         return policy_dict
 
     def get_root(self, path):
-        with open(path) as f:
-            tree = ET.parse(f)
-            root = tree.getroot()
+        tree = ET.ElementTree(ET.fromstring(path))
+        root = tree.getroot()
         return root
 
     
@@ -114,36 +132,35 @@ class Compare:
         for key in self.policy_dict1.keys():
             if key == "Path_Exclusions":
                 print("Path Exclusion Differences:\n")
-                print("\nIn Policy1, but not in Policy2:\n")
+                print(f"\nIn {self.name1}, but not in {self.name2}:\n")
                 for value in self.policy_dict1.get(key):
                     if value not in self.policy_dict2.get(key):
                         print(f"{value.split('|')[-1]}")
                 print("\n"+"*"*40+"\n")
-                print("\nIn Policy2, but not in Policy1:\n")
+                print(f"\nIn {self.name2}, but not in {self.name1}:\n")
                 for value in self.policy_dict2.get(key):
                     if value not in self.policy_dict1.get(key):
                         print(f"{value.split('|')[-1]}")
                 print("\n"+"*"*40+"\n")
             elif key == "Process_Exclusions":
                 print("Process Exclusion Differences:\n")
-                print("\nIn Policy1, but not in Policy2:\n")
+                print(f"\nIn {self.name1}, but not in {self.name2}:\n")
                 for value in self.policy_dict1.get(key):
                     #print(value)
                     if value not in self.policy_dict2.get(key):
                         print(f"{value.split('|')[-3]}")
                 print("\n"+"*"*40+"\n")
-                print("\nIn Policy2, but not in Policy1:\n")
+                print(f"\nIn {self.name2}, but not in {self.name1}:\n")
                 for value in self.policy_dict2.get(key):
                     if value not in self.policy_dict1.get(key):
                         print(f"{value.split('|')[-3]}")
                 print("\n"+"*"*40+"\n")
             elif not self.policy_dict1.get(key) == self.policy_dict2.get(key):
-               print(f"{key:20}: \nPolicy1: {self.policy_dict1.get(key)}\nPolicy2: {self.policy_dict2.get(key)}\n")
+               print(f"{key:20}: \n{self.name1}: {self.policy_dict1.get(key)}\n{self.name2}: {self.policy_dict2.get(key)}\n")
 
-    
     def main(self):
-        self.policy_dict1 = self.parse_xml(self.path1)
-        self.policy_dict2 = self.parse_xml(self.path2)
+        self.policy_dict1 = self.parse_xml(self.r1.content)
+        self.policy_dict2 = self.parse_xml(self.r2.content)
         self.compare_policies()
 
 a = Compare()
