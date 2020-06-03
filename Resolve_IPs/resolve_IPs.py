@@ -72,7 +72,10 @@ NAMAddressList = [
     "cloud-sa.amp.sourcefire.com",
     "panacea.threatgrid.com",
     "cloud-meraki-asn.amp.cisco.com",
-    "cloud-meraki-est.amp.cisco.com"
+    "cloud-meraki-est.amp.cisco.com",
+    "orbital.amp.cisco.com",
+    "ncp.orbital.amp.cisco.com",
+    "update.orbital.amp.cisco.com"
     ]
 
 EUAddressList = [
@@ -117,7 +120,10 @@ EUAddressList = [
     "cloud-sa.eu.amp.sourcefire.com",
     "panacea.threatgrid.eu",
     "cloud-meraki-asn.eu.amp.cisco.com",
-    "cloud-meraki-est.eu.amp.cisco.com"
+    "cloud-meraki-est.eu.amp.cisco.com",
+    "orbital.eu.cisco.com",
+    "ncp.orbital.eu.amp.cisco.com",
+    "update.orbital.eu.amp.cisco.com"
 ]
 
 APJCAddressList = [
@@ -158,7 +164,10 @@ APJCAddressList = [
     "cloud-sa.apjc.amp.cisco.com",
     "cloud-sa.apjc.amp.sourcefire.com",
     "cloud-meraki-asn.apjc.amp.cisco.com",
-    "cloud-meraki-est.apjc.amp.cisco.com"
+    "cloud-meraki-est.apjc.amp.cisco.com",
+    "orbital.apjc.amp.cisco.com",
+    "ncp.orbital.apjc.amp.cisco.com",
+    "update.orbital.apjc.amp.cisco.com"
 ]
 
 TGNAMAddressList = [
