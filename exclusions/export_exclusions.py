@@ -1,7 +1,6 @@
 # Authentication steps: https://developer.cisco.com/docs/secure-endpoint/#!authentication/4-generate-secure-endpoint-api-access-token
 
 import json
-from msilib.schema import Error
 import os
 import requests
 
@@ -39,7 +38,7 @@ def org_selection(orgs):
     choice = input("Choice: ")
     try:
         return orgs[int(choice) - 1]
-    except Error as e:
+    except Exception as e:
         print(e)
         print(f"Choice {choice} not valid, try again.")
         org_selection(orgs)
@@ -71,7 +70,7 @@ def get_exclusion_sets(org_id):
             headers = {'Authorization': f'Bearer: {se_token}'}
             data = {'size': '100'}
             response = requests.get(f'https://api.amp.cisco.com/v3/organizations/{org_id}/exclusion_sets', headers=headers, data=data)
-            return json.loads(response)['data']
+            return json.loads(response.text)['data']
         case _:
             print("Choice not recognized try again.")
             get_exclusion_sets(org_id)
